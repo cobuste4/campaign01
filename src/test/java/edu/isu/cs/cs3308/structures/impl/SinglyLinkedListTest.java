@@ -1,6 +1,12 @@
 package edu.isu.cs.cs3308;
 
+// Imported this to make the test work
+import edu.isu.cs.cs3308.structures.impl.SinglyLinkedList;
+
 import org.junit.Test;
+
+// Also imported this for assertEquals to work
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * @author Isaac Griffith
