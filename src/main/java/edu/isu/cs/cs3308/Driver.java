@@ -1,8 +1,8 @@
 package edu.isu.cs.cs3308;
 
 import edu.isu.cs.cs3308.structures.impl.CircularlyLinkedList;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.*;
 
 /**
@@ -18,12 +18,7 @@ public class Driver {
     public static void main(String[] args) {
         // System.in source: https://www.webucator.com/how-to/how-use-systemin-java.cfm
         try {
-            // TESTING
-            String encOrDec = "E";
-            String MessagePath = "data/messages.txt";
-            String deckPath = "data/deck1.txt";
-            BufferedReader br;
-/*            // Ask the user for a deck to use
+            // Ask the user for a deck to use
             InputStreamReader isr = new InputStreamReader(System.in);
             BufferedReader br = new BufferedReader(isr);
             System.out.print("Enter only the number for the deck to use for encryption/decryption:");
@@ -32,15 +27,19 @@ public class Driver {
 
             // Ask the user for the messages to use
             System.out.print("Now enter the filename containing the message(s) to encrypt/decrypt\n" +
-                    "(the data folder and txt extension will be added for you: ");
+                    "(the data folder and txt extension will be added for you): ");
             String usrMessageInput = br.readLine();
             String MessagePath = "data/" + usrMessageInput + ".txt";
 
             // Ask the user for encrypt or decrypt
             System.out.print("Enter E for encrypt or D for decrypt:");
             String encOrDec = br.readLine();
+
+            // Ask the user if they want printed output
+            System.out.print("Enable verbose? (y,n)");
+            String verbose = br.readLine();
             isr.close();
-            br.close();*/
+            br.close();
 
             // Put contents of the messages into a list structure
             // Code source: https://www.java-samples.com/showtutorial.php?tutorialid=392
@@ -53,13 +52,10 @@ public class Driver {
             }
             fr.close();
 
-
-
             // Call Encrypt or Decrypt given the input
-            if (encOrDec.equals("E")) EncryptMessage(list, deckPath);
-            else if (encOrDec.equals("D")) DecryptMessage(list, deckPath);
+            if (encOrDec.equals("E") || encOrDec.equals("e")) EncryptMessage(list, deckPath, verbose);
+            else if (encOrDec.equals("D") || encOrDec.equals("d")) DecryptMessage(list, deckPath, verbose);
             else System.out.println("Did not recognize your E for Encrypt mor D for Decrypt...");
-
 
         } catch (IOException ioe) {
             System.out.println("Error reading in the information");
@@ -68,45 +64,49 @@ public class Driver {
 
     /**
      * This runs SolitaireEncrypt and outputting it's data to the user
+     *
      * @param messages - the CircularlyLinkedList of messages to encrypt
-     * @param deck - the array of integers to use as the deck
+     * @param deck     - the array of integers to use as the deck
      */
-    public static void EncryptMessage(CircularlyLinkedList messages, String deck){
+    private static void EncryptMessage(@NotNull CircularlyLinkedList messages, String deck, String verbose) {
         // Run Encrypt in a loop until all messages are encrypted
         // Store each encrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> encryptedList = new CircularlyLinkedList<String>();
         SolitaireEncrypt enc = new SolitaireEncrypt(deck);
-        while (!messages.isEmpty()){
-            String tempMessage = (String)messages.removeFirst();
+        enc.enableLogging = verbose;
+        while (!messages.isEmpty()) {
+            String tempMessage = (String) messages.removeFirst();
             encryptedList.addFirst(enc.execute(tempMessage));
         }
 
         // Print encrypted list to the user
         System.out.println("\n\n\nYour encrypted message is:");
         while (!encryptedList.isEmpty()) {
-            System.out.println(encryptedList.removeFirst());
+            System.out.println(encryptedList.removeLast());
         }
     }
 
     /**
      * This runs SolitaireDecrypt and outputting it's data to the user
+     *
      * @param messages - the CircularlyLinkedList of messages to decrypt
-     * @param deck - the array of integers to use as the deck
+     * @param deck     - the array of integers to use as the deck
      */
-    public static void DecryptMessage(CircularlyLinkedList messages, String deck){
+    private static void DecryptMessage(@NotNull CircularlyLinkedList messages, String deck, String verbose) {
         // Run Decrypt in a loop until all messages are decrypted
         // Store each decrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> decryptedList = new CircularlyLinkedList<String>();
         SolitaireDecrypt dec = new SolitaireDecrypt(deck);
-        while (!messages.isEmpty()){
-            String tempMessage = (String)messages.removeFirst();
+        dec.enableLogging = verbose;
+        while (!messages.isEmpty()) {
+            String tempMessage = (String) messages.removeFirst();
             decryptedList.addFirst(dec.execute(tempMessage));
         }
 
         // Print decrypted list to the user
         System.out.println("\n\n\nYour decrypted message is:");
         while (!decryptedList.isEmpty()) {
-            System.out.println(decryptedList.removeFirst());
+            System.out.println(decryptedList.removeLast());
         }
     }
 }

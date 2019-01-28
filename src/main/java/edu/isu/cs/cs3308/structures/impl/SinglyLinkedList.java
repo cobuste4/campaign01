@@ -12,19 +12,18 @@ import edu.isu.cs.cs3308.structures.List;
  * Description: This class impliments a singly linked list to use with the rest of this example
  */
 
-
 // Interfacing source: https://www.geeksforgeeks.org/interfaces-in-java/
 
 public class SinglyLinkedList<E> implements List<E> {
 
     // Code example from our textbook, page 126-7
     // Instance variables of the Singly Linked List
-    protected Node<E> head = null;
-    protected Node<E> tail = null;
-    protected int size = 0;
+    Node<E> head = null;
+    Node<E> tail = null;
+    int size = 0;
 
     // CONSTURCTOR
-    public SinglyLinkedList() {
+    SinglyLinkedList() {
     }
 
     // METHODS

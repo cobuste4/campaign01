@@ -14,14 +14,15 @@ public class SolitaireDecrypt {
     private CircularlyLinkedList<Integer> keystream = new CircularlyLinkedList<>();
     private int firstJokerPos;
     private int secondJokerPos;
+    String enableLogging;
 
     // Constructor(s)
-    public SolitaireDecrypt(String deck) {
+    SolitaireDecrypt(String deck) {
         DeckToList(deck);
     }
 
     // Method(s)
-    public String execute(String messagesToDecrypt) {
+    String execute(String messagesToDecrypt) {
         MessageToIntList(messagesToDecrypt);
 
         // Call StepOne, and the other steps will follow
@@ -102,10 +103,11 @@ public class SolitaireDecrypt {
     @SuppressWarnings("Duplicates")
     private void StepOne() {
 
-        // TESTING
-        System.out.println("\n\n\nPrior to Step 1:");
-        deckList.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\n\n\nPrior to Step 1:");
+            deckList.printList();
+        }
 
         firstJokerPos = deckList.indexOf(27);
         secondJokerPos = deckList.indexOf(28);
@@ -122,7 +124,7 @@ public class SolitaireDecrypt {
             deckList.addFirst(second);
         } else if (firstJokerPos == 26) {
             int jk = deckList.remove(firstJokerPos);
-            int last  =deckList.removeLast();
+            int last = deckList.removeLast();
             deckList.addLast(last);
             deckList.addLast(jk);
         } else {
@@ -135,10 +137,11 @@ public class SolitaireDecrypt {
         firstJokerPos = deckList.indexOf(27);
         secondJokerPos = deckList.indexOf(28);
 
-        // TESTING
-        System.out.println("\nAfter Step 1: Move 27 down 1");
-        deckList.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\nAfter Step 1: Move 27 down 1");
+            deckList.printList();
+        }
 
         StepTwo();
     }
@@ -170,10 +173,11 @@ public class SolitaireDecrypt {
         firstJokerPos = deckList.indexOf(27);
         secondJokerPos = deckList.indexOf(28);
 
-        // TESTING
-        System.out.println("\nAfter Step 2: Move 28 down 2");
-        deckList.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\nAfter Step 2: Move 28 down 2");
+            deckList.printList();
+        }
 
         StepThree();
     }
@@ -214,10 +218,11 @@ public class SolitaireDecrypt {
             deckList.addFirst(ending.removeFirst());
         }
 
-        // TESTING
-        System.out.println("\nAfter Step 3: Triple Cut");
-        deckList.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\nAfter Step 3: Triple Cut");
+            deckList.printList();
+        }
 
         StepFour();
     }
@@ -239,10 +244,11 @@ public class SolitaireDecrypt {
         }
         deckList.addLast(lastCard);
 
-        // TESTING
-        System.out.println("\nAfter Step 4: Move top cards to bottom");
-        deckList.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\nAfter Step 4: Move top cards to bottom");
+            deckList.printList();
+        }
 
         StepFive();
     }
@@ -267,10 +273,11 @@ public class SolitaireDecrypt {
             StepOne();
         }
 
-        // TESTING
-        System.out.println("\nAfter Step 5, keystream is:");
-        keystream.printList();
-        // TESTING
+        // Code to print verbose encrypt/decrypt
+        if (enableLogging.equals("y")) {
+            System.out.println("\nAfter Step 5, keystream is:");
+            keystream.printList();
+        }
     }
 
     /**
