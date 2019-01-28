@@ -2,6 +2,7 @@ package edu.isu.cs.cs3308;
 
 import edu.isu.cs.cs3308.structures.impl.CircularlyLinkedList;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.*;
 
 /**
@@ -17,10 +18,15 @@ public class Driver {
     public static void main(String[] args) {
         // System.in source: https://www.webucator.com/how-to/how-use-systemin-java.cfm
         try {
-            // Ask the user for a deck to use
+            // TESTING
+            String encOrDec = "E";
+            String MessagePath = "data/messages.txt";
+            String deckPath = "data/deck1.txt";
+            BufferedReader br;
+/*            // Ask the user for a deck to use
             InputStreamReader isr = new InputStreamReader(System.in);
             BufferedReader br = new BufferedReader(isr);
-            System.out.print("Enter only the nyumber for the deck to use for encryption/decryption:");
+            System.out.print("Enter only the number for the deck to use for encryption/decryption:");
             String usrDeckInput = br.readLine();
             String deckPath = "data/deck" + usrDeckInput + ".txt";
 
@@ -34,7 +40,7 @@ public class Driver {
             System.out.print("Enter E for encrypt or D for decrypt:");
             String encOrDec = br.readLine();
             isr.close();
-            br.close();
+            br.close();*/
 
             // Put contents of the messages into a list structure
             // Code source: https://www.java-samples.com/showtutorial.php?tutorialid=392
@@ -47,14 +53,11 @@ public class Driver {
             }
             fr.close();
 
-            //Print message(s) to user
-            while (list.size() > 0) {
-                System.out.println(list.removeFirst());
-            }
+
 
             // Call Encrypt or Decrypt given the input
-            if (encOrDec == "E") EncryptMessage(list, deckPath);
-            else if (encOrDec == "D") DecryptMessage(list, deckPath);
+            if (encOrDec.equals("E")) EncryptMessage(list, deckPath);
+            else if (encOrDec.equals("D")) DecryptMessage(list, deckPath);
             else System.out.println("Did not recognize your E for Encrypt mor D for Decrypt...");
 
 
@@ -72,13 +75,14 @@ public class Driver {
         // Run Encrypt in a loop until all messages are encrypted
         // Store each encrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> encryptedList = new CircularlyLinkedList<String>();
+        SolitaireEncrypt enc = new SolitaireEncrypt(deck);
         while (!messages.isEmpty()){
-            SolitaireEncrypt enc = new SolitaireEncrypt(deck);
             String tempMessage = (String)messages.removeFirst();
             encryptedList.addFirst(enc.execute(tempMessage));
         }
 
         // Print encrypted list to the user
+        System.out.println("\n\n\nYour encrypted message is:");
         while (!encryptedList.isEmpty()) {
             System.out.println(encryptedList.removeFirst());
         }
@@ -93,13 +97,14 @@ public class Driver {
         // Run Decrypt in a loop until all messages are decrypted
         // Store each decrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> decryptedList = new CircularlyLinkedList<String>();
+        SolitaireDecrypt dec = new SolitaireDecrypt(deck);
         while (!messages.isEmpty()){
-            SolitaireDecrypt dec = new SolitaireDecrypt(deck);
             String tempMessage = (String)messages.removeFirst();
             decryptedList.addFirst(dec.execute(tempMessage));
         }
 
         // Print decrypted list to the user
+        System.out.println("\n\n\nYour decrypted message is:");
         while (!decryptedList.isEmpty()) {
             System.out.println(decryptedList.removeFirst());
         }

@@ -29,9 +29,9 @@ public class CircularlyLinkedList<E> extends SinglyLinkedList<E> {
         if (isEmpty()) {
             return null;
         }
+        tail.setNext(head.getNext());
         E temp = head.getData();
         head = head.getNext();
-        tail.setNext(head);
         size--;
         if (size == 0) {
             tail = null;
@@ -46,7 +46,7 @@ public class CircularlyLinkedList<E> extends SinglyLinkedList<E> {
         }
         E toRemove = tail.getData();
         tail = head;
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i < size - 1; i++) {
             tail = tail.getNext();
         }
         tail.setNext(head);

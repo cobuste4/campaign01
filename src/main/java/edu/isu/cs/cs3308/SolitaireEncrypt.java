@@ -9,7 +9,7 @@ import java.io.*;
  * This class encrypts a message given a deck and returns the encrypted message
  */
 public class SolitaireEncrypt {
-    private String encMessage;
+    private String encMessage = "";
     private CircularlyLinkedList<Integer> deckList = new CircularlyLinkedList<>();
     private CircularlyLinkedList<Integer> messageAsInts = new CircularlyLinkedList<>();
     private CircularlyLinkedList<Integer> keystream = new CircularlyLinkedList<>();
@@ -25,19 +25,13 @@ public class SolitaireEncrypt {
     public String execute(String messageToEncrypt) {
         MessageToIntList(messageToEncrypt);
 
-        // Get first and second joker positions
-        firstJokerPos = deckList.indexOf(27);
-        secondJokerPos = deckList.indexOf(28);
-
         // Call StepOne, and the other steps will follow
         // Loops as many times as there are chars in the message
-        for (int i = 0; i < messageAsInts.size(); i++){
+        while (keystream.size() != messageAsInts.size()) {
             StepOne();
         }
 
-        // Add keystream with number representation of the message. Mod 26 if less than 26, subtract 26 if more than 26
-        // Convert back to letters (uppercase)
-        // Result is the encrypted message
+        PairwiseAdd();
 
         return encMessage;
     }
@@ -47,6 +41,7 @@ public class SolitaireEncrypt {
      *
      * @param deckPath - the pathname to a file containing a "deck".
      */
+    @SuppressWarnings("Duplicates")
     private void DeckToList(String deckPath) {
         try {
             // Put contents of the deck into an array
@@ -78,6 +73,7 @@ public class SolitaireEncrypt {
      *
      * @param message - the unformatted message to be encrypted
      */
+    @SuppressWarnings("Duplicates")
     private void MessageToIntList(String message) {
         // Convert the message that was given to a CLL of integers
         // Make the String into an array of chars. Source: https://stackoverflow.com/questions/10048899/string-to-char-array-java
@@ -104,19 +100,47 @@ public class SolitaireEncrypt {
      * This is step 1 in the Encryption process.
      * It takes the first joker card and swaps it with the card below(after) it.
      */
+    @SuppressWarnings("Duplicates")
     private void StepOne() {
+
+        // TESTING
+        System.out.println("\n\n\nPrior to Step 1:");
+        deckList.printList();
+        // TESTING
+
+        firstJokerPos = deckList.indexOf(27);
+        secondJokerPos = deckList.indexOf(28);
         // If firstJoker is at the tail, swap head and tail
         if (deckList.get(firstJokerPos).equals(deckList.last())) {
             int head = deckList.removeFirst();
             int tail = deckList.removeLast();
             deckList.addFirst(tail);
             deckList.addLast(head);
+        } else if (deckList.get(firstJokerPos).equals(deckList.first())) {
+            int first = deckList.removeFirst();
+            int second = deckList.removeFirst();
+            deckList.addFirst(first);
+            deckList.addFirst(second);
+        } else if (firstJokerPos == 26) {
+            int jk = deckList.remove(firstJokerPos);
+            int last  =deckList.removeLast();
+            deckList.addLast(last);
+            deckList.addLast(jk);
         } else {
+            int jokerData = deckList.remove(firstJokerPos);
             int afterData = deckList.remove(firstJokerPos);
-            int jokerData = deckList.remove(firstJokerPos - 1);
-            deckList.insert(jokerData, firstJokerPos + 1);
             deckList.insert(afterData, firstJokerPos);
+            firstJokerPos += 1;
+            deckList.insert(jokerData, firstJokerPos);
         }
+        firstJokerPos = deckList.indexOf(27);
+        secondJokerPos = deckList.indexOf(28);
+
+        // TESTING
+        System.out.println("\nAfter Step 1: Move 27 down 1");
+        deckList.printList();
+        // TESTING
+
         StepTwo();
     }
 
@@ -124,9 +148,33 @@ public class SolitaireEncrypt {
      * This is step 2 in the Encryption process
      * It moves the second joker down the deck 2 places.
      */
+    @SuppressWarnings("Duplicates")
     private void StepTwo() {
         int secondJoker = deckList.remove(secondJokerPos);
-        deckList.insert(secondJoker, secondJokerPos + 2);
+        if (secondJokerPos == 26) {
+            int head = deckList.removeFirst();
+            deckList.addFirst(secondJoker);
+            deckList.addLast(head);
+        } else if (secondJokerPos == 27) {
+            int head = deckList.removeFirst();
+            deckList.insert(secondJoker, 1);
+            deckList.addLast(head);
+        } else if (secondJokerPos == 0) {
+            int first = deckList.removeFirst();
+            int second = deckList.removeFirst();
+            deckList.addFirst(secondJoker);
+            deckList.addFirst(second);
+            deckList.addFirst(first);
+        } else {
+            deckList.insert(secondJoker, secondJokerPos + 2);
+        }
+        firstJokerPos = deckList.indexOf(27);
+        secondJokerPos = deckList.indexOf(28);
+
+        // TESTING
+        System.out.println("\nAfter Step 2: Move 28 down 2");
+        deckList.printList();
+        // TESTING
 
         StepThree();
     }
@@ -135,21 +183,42 @@ public class SolitaireEncrypt {
      * This is step 3 in the Encryption process.
      * It performs a "triple cut" on the deck, surrounding the jokers.
      */
+    @SuppressWarnings("Duplicates")
     private void StepThree() {
         CircularlyLinkedList<Integer> beginning = new CircularlyLinkedList<>();
         CircularlyLinkedList<Integer> ending = new CircularlyLinkedList<>();
-        for (int i = 0; i < firstJokerPos; i++) {
-            beginning.addFirst(deckList.removeFirst());
+        // If my variables are swapped, run the for loops backwards
+        if (firstJokerPos > secondJokerPos) {
+            int sz = deckList.size() - 1;
+            for (int i = firstJokerPos; i < sz; i++) {
+                ending.addLast(deckList.removeLast());
+            }
+            for (int i = 0; i < secondJokerPos; i++) {
+                beginning.addFirst(deckList.removeFirst());
+            }
+        } else {
+            int sz = deckList.size() - 1;
+            for (int i = secondJokerPos; i < sz; i++) {
+                ending.addLast(deckList.removeLast());
+            }
+            for (int i = 0; i < firstJokerPos; i++) {
+                beginning.addFirst(deckList.removeFirst());
+            }
         }
-        for (int i = secondJokerPos; i < deckList.size(); i++) {
-            ending.addLast(deckList.removeLast());
+
+        int sz = beginning.size();
+        for (int i = 0; i < sz; i++) {
+            deckList.addLast(beginning.removeLast());
         }
-        for (int i = 0; i < beginning.size(); i++) {
-            deckList.addLast(beginning.removeFirst());
-        }
-        for (int i = 0; i < ending.size(); i++) {
+        sz = ending.size();
+        for (int i = 0; i < sz; i++) {
             deckList.addFirst(ending.removeFirst());
         }
+
+        // TESTING
+        System.out.println("\nAfter Step 3: Triple Cut");
+        deckList.printList();
+        // TESTING
 
         StepFour();
     }
@@ -160,13 +229,21 @@ public class SolitaireEncrypt {
      * Then take that amount of top cards and move them to the bottom.
      * Put the last card back in the last slot. Both jokers use value 27.
      */
+    @SuppressWarnings("Duplicates")
     private void StepFour() {
         int lastCard = deckList.removeLast();
+        int temp = lastCard;
         CircularlyLinkedList<Integer> list = new CircularlyLinkedList<>();
-        for (int i = 0; i < lastCard; i++) {
+        if (lastCard == 28) temp = 27;
+        for (int i = 0; i < temp; i++) {
             deckList.addLast(deckList.removeFirst());
         }
         deckList.addLast(lastCard);
+
+        // TESTING
+        System.out.println("\nAfter Step 4: Move top cards to bottom");
+        deckList.printList();
+        // TESTING
 
         StepFive();
     }
@@ -176,14 +253,44 @@ public class SolitaireEncrypt {
      * It takes the top card value (plus 1) and counts down the deck. Repeat if it's a joker
      * The value reached is one keystream value.
      */
+    @SuppressWarnings("Duplicates")
     private void StepFive() {
         int topCard = deckList.first();
-        int magic = deckList.get(topCard + 1);
+        if (topCard == 28) {
+            topCard = 27;
+        }
+
+        int magic = deckList.get(topCard);
         if (magic != 27 && magic != 28) {
-            keystream.addFirst(magic);
-        }else{
+            keystream.addLast(magic);
+        } else {
             // It's a joker, start back from step 1
             StepOne();
+        }
+
+        // TESTING
+        System.out.println("\nAfter Step 5, keystream is:");
+        keystream.printList();
+        // TESTING
+    }
+
+    /**
+     * This will take the keystream list and the deck list and pairwise add them together.
+     * Stores the result (encrypted message) into encMessage.
+     */
+    private void PairwiseAdd() {
+        // Add keystream with number representation of the message. Subtract 26 if more than 26
+        // Convert back to letters (uppercase)
+        // Result is the encrypted message
+        encMessage = "";
+        int sz = keystream.size();
+        for (int i = 0; i < sz; i++) {
+            int result = messageAsInts.removeFirst() + keystream.removeFirst();
+            if (result > 26) result = result - 26;
+            // Convert to uppercase letter
+            result += 64;
+            encMessage += (char) result;
+
         }
     }
 }

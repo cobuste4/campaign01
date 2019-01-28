@@ -90,7 +90,7 @@ public class SinglyLinkedList<E> implements List<E> {
         }
         E toRemove = tail.getData();
         tail = head;
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i < size - 1; i++) {
             tail = tail.getNext();
         }
         tail.setNext(null);
@@ -122,6 +122,13 @@ public class SinglyLinkedList<E> implements List<E> {
         if (index < 0 || index >= size) {
             return null;
         }
+        if (index == 0) {
+            tail.setNext(head.getNext());
+            E h = head.getData();
+            head = head.getNext();
+            size--;
+            return h;
+        }
 
         Node<E> current = head;
         for (int i = 0; i < index - 1; i++) {
@@ -151,7 +158,7 @@ public class SinglyLinkedList<E> implements List<E> {
         Node<E> tempNode = head;
         for (int i = 0; i < size; i++) {
             stringToOutput += tempNode.getData().toString();
-            stringToOutput += "\n";
+            stringToOutput += " ";
             tempNode = tempNode.getNext();
         }
         System.out.println(stringToOutput);
