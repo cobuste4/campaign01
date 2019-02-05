@@ -15,7 +15,7 @@ public class SolitaireEncrypt {
     private CircularlyLinkedList<Integer> keystream = new CircularlyLinkedList<>();
     private int firstJokerPos;
     private int secondJokerPos;
-    String enableLogging;
+    String enableLogging = "n";
 
     // Constructor(s)
     SolitaireEncrypt(String deck) {
