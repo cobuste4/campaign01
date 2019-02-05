@@ -1,7 +1,6 @@
 package edu.isu.cs.cs3308;
 
 import edu.isu.cs.cs3308.structures.impl.CircularlyLinkedList;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
@@ -68,7 +67,7 @@ public class Driver {
      * @param messages - the CircularlyLinkedList of messages to encrypt
      * @param deck     - the array of integers to use as the deck
      */
-    private static void EncryptMessage(@NotNull CircularlyLinkedList messages, String deck, String verbose) {
+    private static void EncryptMessage( CircularlyLinkedList messages, String deck, String verbose) {
         // Run Encrypt in a loop until all messages are encrypted
         // Store each encrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> encryptedList = new CircularlyLinkedList<String>();
@@ -92,7 +91,7 @@ public class Driver {
      * @param messages - the CircularlyLinkedList of messages to decrypt
      * @param deck     - the array of integers to use as the deck
      */
-    private static void DecryptMessage(@NotNull CircularlyLinkedList messages, String deck, String verbose) {
+    private static void DecryptMessage( CircularlyLinkedList messages, String deck, String verbose) {
         // Run Decrypt in a loop until all messages are decrypted
         // Store each decrypted message in a CircularlyLinkedList
         CircularlyLinkedList<String> decryptedList = new CircularlyLinkedList<String>();
